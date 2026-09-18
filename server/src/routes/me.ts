@@ -252,5 +252,8 @@ meRoutes.get('/insights', (c) => {
       return i.srs_state !== 'new' && r >= b.min && r < b.max
     }).length,
   }))
-  return c.json({ buckets, total: items.length })
+  // 四个分桶只统计已进入曲线（srs_state ≠ new）的卡，但 total 是全部词条。
+  // 不把「待学习」单列出来，标题的「共 N 张卡」就会大于分桶之和。
+  const unstudied = items.filter((i) => i.srs_state === 'new').length
+  return c.json({ buckets, total: items.length, unstudied })
 })

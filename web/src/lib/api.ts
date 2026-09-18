@@ -189,6 +189,8 @@ export const api = {
     request<{
       buckets: { label: string; min: number; max: number; color: string; count: number }[]
       total: number
+      /** srs_state = 'new' 的卡数；分桶不计入它们，靠这个数把标题和分桶对上 */
+      unstudied: number
     }>('/insights'),
 
   /* ---- tutor ---- */

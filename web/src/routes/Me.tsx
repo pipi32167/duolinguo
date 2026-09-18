@@ -83,6 +83,19 @@ export function Me() {
                         <b>{b.count} 个</b>
                       </div>
                     ))}
+                    {/* 单列待学习，四桶之和 + 待学习 = 标题的「共 N 张卡」 */}
+                    {insights.data.unstudied > 0 && (
+                      <div className="kv">
+                        <span>
+                          <i
+                            className="dot"
+                            style={{ background: 'var(--muted-2)', display: 'inline-block', marginRight: 8 }}
+                          />
+                          待学习
+                        </span>
+                        <b>{insights.data.unstudied} 个</b>
+                      </div>
+                    )}
                     <div className="kv" style={{ borderBottom: 'none' }}>
                       <span>平均记住率</span>
                       <b>{avgRetentionLabel(me.data.deck.reviewed, me.data.deck.avgRetention)}</b>
