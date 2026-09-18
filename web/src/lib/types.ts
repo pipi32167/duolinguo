@@ -145,6 +145,8 @@ export interface DeckStats {
   fresh?: number
   byState: Record<'new' | 'learning' | 'review' | 'relearning', number>
   avgRetention: number
+  /** 参与计算平均值的卡片数；为 0 时 avgRetention 无意义（见 retentionLabel） */
+  reviewed: number
   mature: number
   young: number
   fragile: number

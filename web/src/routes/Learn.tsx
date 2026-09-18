@@ -7,7 +7,7 @@ import { Brain, Camera, Check, Deck, Lock, Sparkle, Star } from '../components/I
 import { useAsync } from '../lib/hooks'
 import { api } from '../lib/api'
 import type { PathNode } from '../lib/types'
-import { goalHint, pct } from '../lib/format'
+import { avgRetentionLabel, goalHint } from '../lib/format'
 
 /** 04 · 主页 · 学习路径 — 路径节点由遗忘曲线的到期数驱动，不再是静态假数据 */
 export function Learn() {
@@ -97,7 +97,7 @@ export function Learn() {
               </div>
               <div className="sc">
                 <span className="sc-n" style={{ color: 'var(--brand)' }}>
-                  {pct(deck.data.stats.avgRetention)}
+                  {avgRetentionLabel(deck.data.stats.reviewed, deck.data.stats.avgRetention)}
                 </span>
                 <span className="sc-l">平均记住率</span>
               </div>

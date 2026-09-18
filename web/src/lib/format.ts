@@ -128,3 +128,17 @@ export function goalHint(input: {
   if (streak <= 0) return `再学 ${left} 分钟就能完成今天的 ${goalMin} 分钟目标。`
   return `再学 ${left} 分钟就能收工，连续 ${streak} 天不会断。`
 }
+
+/**
+ * 「平均记住率」的展示值。
+ *
+ * 注意与上面的 retentionLabel 区分：那个返回单张卡的档位标签（牢记/稳固），
+ * 这个用于整个词库的平均值。
+ *
+ * deckStats 在 reviewed = 0（一张卡都还没复习过）时把 avgRetention 算作 0，
+ * 直接渲染就是「0%」—— 看上去像「一个都记不住」，实际上根本没有测量数据。
+ * 拍照加词之后、开始复习之前就是这个状态。这种情况返回占位符。
+ */
+export function avgRetentionLabel(reviewed: number, avgRetention: number): string {
+  return reviewed === 0 ? '—' : pct(avgRetention)
+}

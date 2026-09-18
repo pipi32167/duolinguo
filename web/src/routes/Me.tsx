@@ -6,7 +6,7 @@ import { Sparkle } from '../components/Icons'
 import { api } from '../lib/api'
 import { useAsync, useTicker } from '../lib/hooks'
 import { useApp } from '../app/AppContext'
-import { formatClock, pct } from '../lib/format'
+import { avgRetentionLabel, formatClock } from '../lib/format'
 import { LANGUAGES } from './OnboardingLanguage'
 
 /** 我的 — 统计 / 学习设置 / AI 状态 / 后端入口 */
@@ -85,7 +85,7 @@ export function Me() {
                     ))}
                     <div className="kv" style={{ borderBottom: 'none' }}>
                       <span>平均记住率</span>
-                      <b>{pct(me.data.deck.avgRetention)}</b>
+                      <b>{avgRetentionLabel(me.data.deck.reviewed, me.data.deck.avgRetention)}</b>
                     </div>
                   </div>
                 </section>

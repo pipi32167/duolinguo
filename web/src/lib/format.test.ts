@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { goalHint } from './format.ts'
+import { avgRetentionLabel, goalHint } from './format.ts'
 
 /**
  * 守「今日目标」的引导语：旧实现只要没达标就说「连续天数不会断」，
@@ -54,4 +54,23 @@ test('词库为空优先于达标分支（同分钟数下两种状态文案不�
   assert.notEqual(withDeck, noDeck)
   assert.match(withDeck, /复习队列/)
   assert.ok(!noDeck.includes('复习队列'))
+})
+
+/**
+ * 守「平均记住率」：一张卡都没复习过时后端给的是 0，
+ * 那不是「记住率 0%」而是「没有数据」。拍照加词后、开始复习前就是这个状态。
+ */
+test('没有复习记录时不显示 0%，而是占位符', () => {
+  assert.equal(avgRetentionLabel(0, 0), '—')
+  assert.ok(!avgRetentionLabel(0, 0).includes('0%'))
+})
+
+test('有复习记录时照常显示百分比', () => {
+  assert.equal(avgRetentionLabel(9, 0.92), '92%')
+  assert.equal(avgRetentionLabel(2, 0.5), '50%')
+})
+
+test('有记录且记住率确实为 0 时保留真实的 0%', () => {
+  // reviewed > 0 才是真测量：不能把真的 0% 也变成占位符
+  assert.equal(avgRetentionLabel(3, 0), '0%')
 })

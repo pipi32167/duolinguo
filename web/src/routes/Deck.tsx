@@ -7,7 +7,7 @@ import { Camera, Deck as DeckIcon, Sparkle, Trash } from '../components/Icons'
 import { RetentionMeter } from '../components/ForgettingCurve'
 import { ApiError, api } from '../lib/api'
 import { useAsync, useToast } from '../lib/hooks'
-import { SRS_STATE_LABEL, formatRelativeDue, pct, retentionColor, retentionLabel } from '../lib/format'
+import { SRS_STATE_LABEL, avgRetentionLabel, formatRelativeDue, retentionColor, retentionLabel } from '../lib/format'
 import type { Item } from '../lib/types'
 
 const FILTERS = [
@@ -98,7 +98,7 @@ export function DeckRoute() {
         <h1 className="h2">我的词库</h1>
         <p className="lede">
           {s
-            ? `${s.total} 个词条 · ${s.due} 个今日到期 · 平均记住率 ${pct(s.avgRetention)}`
+            ? `${s.total} 个词条 · ${s.due} 个今日到期 · 平均记住率 ${avgRetentionLabel(s.reviewed, s.avgRetention)}`
             : '正在读取…'}
         </p>
 

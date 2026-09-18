@@ -472,6 +472,9 @@ export function deckStats(userId: string, now = Date.now()) {
     due,
     byState,
     avgRetention,
+    // 平均值的分母。reviewed = 0 时 avgRetention 是 0，但那是「没测过」而不是
+    // 「记住率 0%」，UI 要靠这个计数决定显示占位符还是真数字。
+    reviewed: reviewed.length,
     mature: rows.filter((i) => i.stability >= 21).length,
     young: rows.filter((i) => i.stability > 0 && i.stability < 21).length,
     fragile: rows.filter((i) => i.lapses > 0).length,
