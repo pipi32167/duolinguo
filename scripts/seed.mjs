@@ -60,10 +60,16 @@ const guessType = (t) => {
 const upsertUser = db.prepare(
   `INSERT INTO users(id, nickname, avatar_char, lang, lang_label, daily_goal_min, created_at, last_active_at)
    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-   ON CONFLICT(id) DO UPDATE SET nickname = excluded.nickname, avatar_char = excluded.avatar_char, lang_label = excluded.lang_label, daily_goal_min = excluded.daily_goal_min`,
+   ON CONFLICT(id) DO UPDATE SET nickname = excluded.nickname, avatar_char = excluded.avatar_char, lang_label = excluded.lang_label, daily_goal_min = excluded.daily_goal_min,
+     -- 必须一起回写 created_at。否则对已经存在的账号（比如 verify-responsive.sh
+     -- 先用设备 id 打过 API 的场景）不会回填，页面上就会出现
+     -- 「加入 1 天」和「连续 14 天」同屏的自我矛盾。
+     created_at = excluded.created_at`,
 )
 
-upsertUser.run(DEVICE, '学习者 4821', '学', 'en', '英语', 10, now - 14 * 86_400_000, now)
+// created_at 必须早于 longest_streak（下方 user_stats 里的 21 天），也要覆盖
+// 30 天复习热力图：账号只有 14 天却记着 21 天最长连续，是同一类自相矛盾。
+upsertUser.run(DEVICE, '学习者 4821', '学', 'en', '英语', 10, now - 30 * 86_400_000, now)
 console.log(`→ device ${DEVICE}`)
 
 const insertItem = db.prepare(
