@@ -59,7 +59,7 @@ export function Learn() {
                 ? `${home.data.path.due} 个词到期复习`
                 : todayMin >= goalMin
                   ? '今日目标已完成'
-                  : '拍照加词，AI 生成课程'}
+                  : '每张照片，都是一个新单词'}
             </span>
           </div>
           <span className="u-guide">指南</span>
@@ -156,7 +156,11 @@ export function Learn() {
             <Camera size={20} />
             拍照加词
           </button>
-          <button className="btn btn-block btn-blue" onClick={() => navigate('/review')}>
+          <button
+            className="btn btn-block btn-blue"
+            onClick={() => navigate('/review')}
+            disabled={!!home.data && home.data.path.deckTotal === 0}
+          >
             <Brain size={20} />
             开始复习
           </button>

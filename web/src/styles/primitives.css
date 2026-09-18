@@ -2733,6 +2733,10 @@
   color: var(--red-ink);
   font-size: 10.5px;
   font-weight: 900;
+  /* narrow containers (player pages cap at --immersive-max) squeeze the
+     topbar; without nowrap the pill folds into two lines */
+  white-space: nowrap;
+  flex: none;
 }
 
 @media (min-width: 600px) {
@@ -2774,6 +2778,14 @@
   .tabbar {
     padding-left: max(4px, calc((100vw - 620px) / 2));
     padding-right: max(4px, calc((100vw - 620px) / 2));
+  }
+
+  /* 会话页（player）容器被 --immersive-max 锁在 560px，
+     顶栏塞不下「今日目标 + 补心 + 三计数」：语言 chip 被截断。
+     会话页自己有 0/10 进度条，顶栏里的今日目标属于重复信息，
+     平板宽度下直接隐掉（补心 pill 保留，桌面端另有承载）。 */
+  .page--player .topbar-goal {
+    display: none;
   }
 }
 
