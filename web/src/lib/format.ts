@@ -96,3 +96,35 @@ export function pct(value: number, digits = 0): string {
 export function plural(n: number, unit: string): string {
   return `${n} ${unit}`
 }
+
+/**
+ * 「今日目标」卡片的引导语。原文案只要没达标就写「连续天数不会断」，
+ * 对词库为空或 streak = 0 的新用户是假的，所以按状态分支。
+ *
+ * 分支顺序有意义：词库为空必须排在最前。达标分支承诺的
+ * 「会加长明天的复习队列」在 deckTotal = 0 时同样不成立 ——
+ * 先学完再清空词库（POST /items/delete）就能落进那个状态，
+ * 此时页面上连 SRS 总览都不会渲染。
+ */
+export function goalHint(input: {
+  todayMin: number
+  goalMin: number
+  streak: number
+  deckTotal: number
+}): string {
+  const { todayMin, goalMin, streak, deckTotal } = input
+  const reached = todayMin >= goalMin
+
+  // 没有词就没有课程，也没有明天的到期队列：
+  // 这一档里「连续天数」「复习队列」的说法一律不成立。
+  if (deckTotal === 0) {
+    return reached
+      ? '今日目标已完成 —— 不过词库还是空的，拍几张照片，明天才有内容可复习。'
+      : '词库还是空的，先拍几张照片攒几个词，今天就有内容可学。'
+  }
+
+  if (reached) return '今天的量已经够了 —— 再加一节会加长明天的复习队列。'
+  const left = Math.max(1, goalMin - todayMin)
+  if (streak <= 0) return `再学 ${left} 分钟就能完成今天的 ${goalMin} 分钟目标。`
+  return `再学 ${left} 分钟就能收工，连续 ${streak} 天不会断。`
+}

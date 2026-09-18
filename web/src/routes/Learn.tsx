@@ -7,7 +7,7 @@ import { Brain, Camera, Check, Deck, Lock, Sparkle, Star } from '../components/I
 import { useAsync } from '../lib/hooks'
 import { api } from '../lib/api'
 import type { PathNode } from '../lib/types'
-import { pct } from '../lib/format'
+import { goalHint, pct } from '../lib/format'
 
 /** 04 · 主页 · 学习路径 — 路径节点由遗忘曲线的到期数驱动，不再是静态假数据 */
 export function Learn() {
@@ -78,9 +78,12 @@ export function Learn() {
               <i style={{ width: `${goalPct}%` }} />
             </div>
             <p className="learn-goal-hint">
-              {todayMin >= goalMin
-                ? '今天的量已经够了 —— 再加一节会加长明天的复习队列。'
-                : `再学 ${Math.max(1, goalMin - todayMin)} 分钟就能收工，连续天数不会断。`}
+              {goalHint({
+                todayMin,
+                goalMin,
+                streak: home.data?.stats.streak ?? stats?.streak ?? 0,
+                deckTotal: home.data?.path.deckTotal ?? 0,
+              })}
             </p>
           </div>
 
