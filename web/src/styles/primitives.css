@@ -470,8 +470,10 @@
   align-items: center;
   gap: 20px;
   /* Room for the ±spread node offset plus the "从这里开始" bubble, so the
-     staggered nodes never push the path box past the viewport. */
-  padding: 34px calc(var(--spread) + var(--bubble-room)) 26px;
+     staggered nodes never push the path box past the viewport. The top gap is
+     not a plain gap: the bubble sits at top: -46px on the current node, so a
+     value under ~46px lets it bleed over the card above. */
+  padding: 58px calc(var(--spread) + var(--bubble-room)) 26px;
   position: relative;
 }
 
