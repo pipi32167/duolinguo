@@ -1,8 +1,13 @@
 const DEVICE_KEY = 'lingo.device'
 const PROFILE_KEY = 'lingo.profile'
 
-function uuid(): string {
-  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) return crypto.randomUUID()
+/**
+ * 安全上下文才有 crypto.randomUUID（HTTPS / localhost）。
+ * 局域网 HTTP 访问或旧 WebKit 下它是 undefined，裸调会直接抛
+ * "crypto.randomUUID is not a function"，所以统一从这里取。
+ */
+export function uuid(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') return crypto.randomUUID()
   return 'dev-' + Math.random().toString(36).slice(2) + Date.now().toString(36)
 }
 

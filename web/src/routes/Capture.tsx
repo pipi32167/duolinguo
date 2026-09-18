@@ -7,6 +7,7 @@ import { EmptyState, ErrorBox, InfoBanner } from '../components/State'
 import { Album, Camera, Check, Sparkle, Trash } from '../components/Icons'
 import { ApiError, api } from '../lib/api'
 import { humanBytes, prepareImage, type PreparedImage } from '../lib/image'
+import { uuid } from '../lib/device'
 import { useToast } from '../lib/hooks'
 import type { Item, ItemType } from '../lib/types'
 
@@ -56,7 +57,7 @@ export function Capture() {
         }
         try {
           const p = await prepareImage(file)
-          prepared.push({ id: crypto.randomUUID(), prepared: p, name: file.name || '照片' })
+          prepared.push({ id: uuid(), prepared: p, name: file.name || '照片' })
         } catch (err) {
           setError((err as Error).message)
         }
