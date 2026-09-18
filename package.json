@@ -1,0 +1,25 @@
+{
+  "name": "lingo",
+  "private": true,
+  "version": "1.0.0",
+  "description": "拍照识别单词 → AI 生成多邻国式课程 → 按遗忘曲线复习",
+  "workspaces": [
+    "web",
+    "server"
+  ],
+  "scripts": {
+    "setup": "npm install && cp -n server/.env.example server/.env || true",
+    "dev": "node scripts/dev.mjs",
+    "dev:server": "npm --workspace server run dev",
+    "dev:web": "npm --workspace web run dev",
+    "build": "npm --workspace web run build",
+    "test": "npm --workspace server run test && npm --workspace web run test",
+    "typecheck": "npm --workspace server run typecheck && npm --workspace web run typecheck",
+    "mock": "AI_MOCK=1 npm --workspace server run dev",
+    "test:web": "npm --workspace web run test",
+    "test:server": "npm --workspace server run test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

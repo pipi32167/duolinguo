@@ -1,0 +1,111 @@
+/* ===========================================================
+   LINGO · DESIGN TOKENS
+   Extracted verbatim from the handoff prototype
+   (lingo-language-app.html). This file is the single source of
+   truth for colour, radius, shadow, motion and the type scale.
+   Do not substitute framework defaults.
+   =========================================================== */
+
+:root {
+  /* ---- typography ---- */
+  --font: 'Nunito', 'Quicksand', ui-rounded, 'SF Pro Rounded', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', system-ui, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --font-num: tabular-nums;
+
+  /* ---- product surface ---- */
+  --bg: #ffffff;
+  --soft: #f4f7f5;
+  --soft-2: #f0f3f2;
+  --ink: #17211f;
+  --ink2: #3e4a47;
+  --muted: #8894a0;
+  --muted-2: #a9b4b0;
+  --line: #e7ebe9;
+  --line-2: #d6ddda;
+
+  /* ---- product colour system ---- */
+  --brand: #3fc161;
+  --brand-d: #2fa44e;
+  --brand-deep: #227a3b;
+  --brand-t: #e9f9ee;
+  --brand-ring: rgba(63, 193, 97, 0.42);
+
+  --gold: #ffb420;
+  --gold-d: #e09a0a;
+  --gold-t: #fff3d9;
+  --gold-line: #f3e2b8;
+  --gold-ink: #8a5e00;
+
+  --blue: #1fb6f0;
+  --blue-d: #0e97cc;
+  --blue-t: #e2f5fd;
+  --blue-line: #bfe8f8;
+  --blue-ink: #0c6e92;
+
+  --red: #ff4b4b;
+  --red-d: #d93a3a;
+  --red-t: #ffecec;
+  --red-line: #f8d2d2;
+  --red-ink: #b93030;
+
+  --purple: #a96bff;
+  --purple-d: #8e4ce8;
+  --purple-t: #f2ebff;
+  --purple-line: #dcc9fa;
+  --purple-ink: #6b33c4;
+
+  --lock: #e9edeb;
+  --lock-d: #d6dcd9;
+
+  /* ---- gradients (lifted from the exported screens) ---- */
+  --grad-rank: linear-gradient(180deg, #fff6e2, #ffefd0);
+  --grad-super: linear-gradient(160deg, #b27cff, #8e4ce8);
+
+  /* ---- radii ---- */
+  --r-10: 10px;
+  --r-11: 11px;
+  --r-12: 12px;
+  --r-13: 13px;
+  --r-14: 14px;
+  --r-15: 15px;
+  --r-16: 16px;
+  --r-17: 17px;
+  --r-18: 18px;
+  --r-20: 20px;
+  --r-22: 22px;
+  --r-24: 24px;
+  --r-26: 26px;
+  --r-pill: 99px;
+
+  /* ---- elevation: the signature "3D button" edge ---- */
+  --edge: 0 4px 0;
+  --edge-sm: 0 3px 0;
+  --edge-lg: 0 6px 0;
+  --shadow-modal: 0 24px 60px -18px rgba(0, 0, 0, 0.45);
+  --shadow-pop: 0 8px 24px -10px rgba(23, 33, 31, 0.22);
+
+  /* ---- motion ---- */
+  --t-press: 0.08s ease;
+  --t-fast: 0.15s;
+  --t-rise: 0.26s ease-out;
+  --t-pop: 0.28s cubic-bezier(0.2, 1.5, 0.5, 1);
+  --t-fade: 0.3s ease-out;
+  --ring: 2.2s ease-out infinite;
+
+  /* ---- fluid type scale (clamp: mobile → desktop) ---- */
+  --fs-hero: clamp(30px, 6.2vw, 44px);
+  --fs-h1: clamp(24px, 4.4vw, 34px);
+  --fs-h2: clamp(21px, 3.4vw, 27px);
+  --fs-h3: clamp(17px, 2.2vw, 19px);
+  --fs-body: clamp(14px, 1.5vw, 15.5px);
+  --fs-small: 13px;
+  --fs-xs: 11.5px;
+
+  /* ---- layout ---- */
+  --shell-max: 1080px;
+  --col-max: 720px;
+  --immersive-max: 560px;
+  --sidebar-w: 244px;
+  --gutter: clamp(16px, 3.2vw, 32px);
+  --tabbar-h: 64px;
+}
