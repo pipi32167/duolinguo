@@ -25,6 +25,11 @@ window.__ex = {
     const opts = qa('.opts .opt')
     const bank = qa('.wb-pool .chip')
     const cols = qa('.split-2 .itemlist')
+    // DOM 里永远是两个 .itemlist —— 数数量抓不到「手机上折成单列」。
+    // 只有真实矩形能说明是否并排：两列竖向有重叠 = 并排；一列落在另一列下面 = 折了。
+    const colBoxes = cols.map((c) => this.box(c))
+    const matchSide =
+      colBoxes.length === 2 && colBoxes[0].bottom > colBoxes[1].top && Math.abs(colBoxes[0].top - colBoxes[1].top) <= 8
     const ta = q('textarea')
     const body = q('.lessonbody')
     const foot = q('.lessonfoot')
@@ -51,6 +56,7 @@ window.__ex = {
       matchCols: cols.length,
       matchLeft: cols[0] ? cols[0].querySelectorAll('button').length : 0,
       matchRight: cols[1] ? cols[1].querySelectorAll('button').length : 0,
+      matchSide,
 
       inputH: ta ? Math.round(ta.getBoundingClientRect().height) : null,
 

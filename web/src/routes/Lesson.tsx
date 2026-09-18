@@ -8,6 +8,7 @@ import { ApiError, api } from '../lib/api'
 import { useAsync, useToast } from '../lib/hooks'
 import { speak, sttSupported, listen, stopSpeaking } from '../lib/speech'
 import { canCheck, chipKey, chipText, emptyDraft, evaluate, normalize, type Draft } from '../lib/answer'
+import { blankPick, pickPair, type PairPickState } from '../lib/match'
 import type { Exercise } from '../lib/types'
 
 type Phase = 'answering' | 'correct' | 'wrong' | 'hearts-empty'
@@ -513,33 +514,38 @@ function MatchPairs({
     () => [...pairs.map((p) => p.right)].sort((a, b) => a.localeCompare(b, 'zh')),
     [pairs],
   )
-  const [left, setLeft] = useState<string>()
-  const [wrongPair, setWrongPair] = useState<string>()
+  const [pick, setPick] = useState<PairPickState>(blankPick)
 
   const matches = draft.matches
   const matchedLeft = (value: string) => Object.keys(matches).includes(value)
   const matchedRight = (value: string) => Object.values(matches).includes(value)
 
   useEffect(() => {
-    setLeft(undefined)
-    setWrongPair(undefined)
+    setPick(blankPick())
   }, [exercise.id])
 
-  const pick = (side: 'left' | 'right', value: string) => {
-    if (locked || matchedLeft(value) || matchedRight(value)) return
-    if (side === 'left') {
-      setLeft(value)
-      return
+  /* 左列 / 右列谁先点都行：两边各有一个选中项时立刻判定 */
+  const tap = (side: 'left' | 'right', value: string) => {
+    if (locked) return
+    const next = pickPair(pairs, { ...pick, matches }, side, value)
+    if (next === pick) return
+    setPick(next)
+    setDraft({ ...draft, matches: next.matches })
+    if (next.wrong) {
+      const wrong = next.wrong
+      window.setTimeout(() => setPick((s) => (s.wrong === wrong ? { ...s, wrong: null } : s)), 600)
     }
-    if (!left) return
-    const expected = pairs.find((p) => p.left === left)?.right
-    if (normalize(expected ?? '') === normalize(value)) {
-      setDraft({ ...draft, matches: { ...matches, [left]: value } })
-      setLeft(undefined)
-    } else {
-      setWrongPair(value)
-      window.setTimeout(() => setWrongPair(undefined), 600)
-    }
+  }
+
+  /* 已配对：绿色定色；选中：蓝色；判错：红色闪烁 */
+  const chipSkin = (side: 'left' | 'right', value: string) => {
+    const matched = side === 'left' ? matchedLeft(value) : matchedRight(value)
+    const selected = side === 'left' ? pick.selLeft === value : pick.selRight === value
+    const wrong = pick.wrong ? (side === 'left' ? pick.wrong.left === value : pick.wrong.right === value) : false
+    if (matched) return { background: 'var(--brand-t)', borderColor: 'var(--brand)', color: 'var(--brand-deep)' }
+    if (wrong) return { background: 'var(--red-t)', borderColor: 'var(--red)' }
+    if (selected) return { background: 'var(--blue-t)', borderColor: 'var(--blue)' }
+    return {}
   }
 
   return (
@@ -548,23 +554,17 @@ function MatchPairs({
         把词和释义配对
       </h2>
       <p style={{ fontSize: 12.5, fontWeight: 800, color: 'var(--muted)', marginTop: 10 }}>
-        先点左边的词，再点右边对应的释义。全配对完后点「检查」。
+        点一个词，再点它对应的释义；配错会闪红。全部配对后点「检查」。
       </p>
-      <div className="split-2" style={{ marginTop: 18, gap: 10 }}>
+      <div className="split-2 split-2--match" style={{ marginTop: 18 }}>
         <div className="itemlist">
           {pairs.map((p) => (
             <button
               key={p.left}
-              className={`chip${left === p.left ? ' is-picked' : ''}`}
-              style={{
-                width: '100%',
-                padding: '16px 14px',
-                opacity: matchedLeft(p.left) ? 0.35 : 1,
-                borderColor: left === p.left ? 'var(--blue)' : undefined,
-                background: left === p.left ? 'var(--blue-t)' : undefined,
-              }}
+              className="chip"
+              style={{ width: '100%', padding: '16px 14px', ...chipSkin('left', p.left) }}
               disabled={locked || matchedLeft(p.left)}
-              onClick={() => pick('left', p.left)}
+              onClick={() => tap('left', p.left)}
             >
               {p.left}
             </button>
@@ -575,15 +575,9 @@ function MatchPairs({
             <button
               key={r}
               className="chip"
-              style={{
-                width: '100%',
-                padding: '16px 14px',
-                background: wrongPair === r ? 'var(--red-t)' : undefined,
-                borderColor: wrongPair === r ? 'var(--red)' : undefined,
-                opacity: matchedRight(r) ? 0.35 : 1,
-              }}
+              style={{ width: '100%', padding: '16px 14px', ...chipSkin('right', r) }}
               disabled={locked || matchedRight(r)}
-              onClick={() => pick('right', r)}
+              onClick={() => tap('right', r)}
             >
               {r}
             </button>

@@ -246,6 +246,8 @@ for (const vp of VIEWPORTS) {
     if (before.minTapH !== null && before.minTapH < 44) issues.push(`可点区域过矮 ${before.minTapH}px (<44)`)
     if (before.footVisible === false) issues.push('「检查」按钮不在视口内')
     if (kind === 'match_pairs' && before.matchLeft !== before.matchRight) issues.push(`配对两列数量不等 ${before.matchLeft}/${before.matchRight}`)
+    // 数量相等不够：手机上两列会折成一列，看起来是 8 个连续选项
+    if (kind === 'match_pairs' && !before.matchSide) issues.push('配对两列没有并排（折成了单列）')
     if (kind === 'translate_input' && (before.inputH ?? 0) < 80) issues.push(`输入框过矮 ${before.inputH}px`)
     if (!after || !after.submitted) {
       issues.push(`「检查」按钮在填答后仍禁用${after?.diag ? ` (${JSON.stringify(after.diag)})` : ''}`)
