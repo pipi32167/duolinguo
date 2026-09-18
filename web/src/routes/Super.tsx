@@ -76,6 +76,8 @@ export function Super() {
         </button>
         <p className="fineprint">
           试用结束后自动续费 {current.price} {current.unit}，可随时在账户中取消。
+          <br />
+          原型构建：订阅支付流程未接入真实支付渠道，以上方案与续费不会实际扣款。
         </p>
 
         <div className="card" style={{ marginTop: 22 }}>
